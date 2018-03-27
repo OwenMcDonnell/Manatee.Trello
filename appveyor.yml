@@ -6,14 +6,10 @@ build:
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
 
-install:
- - nuget install  NUnit.Console -OutputDirectory %SYSTEMDRIVE%\Tools\NUnit38
- - set path=%SYSTEMDRIVE%\Tools\NUnit38\NUnit.ConsoleRunner.3.8.0\tools\;%path%
- - mkdir %SYSTEMDRIVE%\Tools\NUnit38\NUnit.ConsoleRunner.3.8.0\tools\addins
- #- copy %SYSTEMDRIVE%\Tools\NUnit3\bin\addins %SYSTEMDRIVE%\Tools\NUnit38\NUnit.ConsoleRunner.3.8.0\tools\addins
- #- copy c:\Tools\NUnit3\bin\appveyor.addins %SYSTEMDRIVE%\Tools\NUnit38\NUnit.ConsoleRunner.3.8.0\tools
-
 before_build:
  - nuget restore Manatee.Trello.sln
  - dotnet restore Manatee.Trello.sln
  - git submodule update --init
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
